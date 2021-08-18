@@ -14,6 +14,7 @@ uses
 
 begin
   RequireDerivedFormResource:=True;
+  Application.Title:='PycByte';
   Application.Scaled:=True;
   Application.Initialize;
   Application.CreateForm(TMain, Main);

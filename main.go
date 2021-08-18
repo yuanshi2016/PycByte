@@ -7,22 +7,42 @@ import (
 )
 
 func main() {
-	//var Path, _ = Utils.ListDir("/Volumes/D/GolangTool/PycUncode/test/pyc")
-	//if len(Path.Struct) <= 0{
-	//	//vcl.ShowMessage("Struct文件不存在")
-	//}
-	//StrUctByte := Utils.OpenFile(Path.Struct)
-	//for _, TempPyc := range Path.Pyc {
-	//	var NewPyc []byte
-	//	TempPycType := Utils.OpenFile(TempPyc.FullPath)
-	//	NewPyc = append(NewPyc, StrUctByte[0:16]...)
-	//	NewPyc = append(NewPyc, TempPycType[12:len(TempPycType)]...)
-	//	Utils.CreateFileWithDir(TempPyc.Path+TempPyc.Name+".py",NewPyc)
-	//}
 	vcl.Application.SetScaled(true)
-	vcl.Application.SetTitle("project1")
+	vcl.Application.SetTitle("PycByte")
 	vcl.Application.Initialize()
 	vcl.Application.SetMainFormOnTaskBar(true)
 	vcl.Application.CreateForm(&PycUncodeVlc.Main)
 	vcl.Application.Run()
+	//var SavePath = "/Volumes/D/GolangTool/PycUncode/test/save"
+	//var Path, _ = Utils.ListDir("/Volumes/D/GolangTool/PycUncode/test/aaaa")
+	//if len(Path.Struct) <= 0{
+	//	//vcl.ShowMessage("Struct文件不存在")
+	//}
+	//wp := workpool.New(10)
+	//StrUctByte := Utils.OpenFile(Path.Struct)
+	//for _, TempPyc := range Path.Pyc {
+	//	var NewPyc []byte
+	//	TempPycType := Utils.OpenFile(TempPyc.FullPath)
+	//	//TODO 检测文件头
+	//	if hex.EncodeToString(StrUctByte[0:16]) != hex.EncodeToString(TempPycType[0:16]){
+	//		NewPyc = append(NewPyc, StrUctByte[0:16]...)
+	//		NewPyc = append(NewPyc, TempPycType[12:len(TempPycType)]...)
+	//		Utils.CreateFileWithDir(TempPyc.FullPath, NewPyc)
+	//	}
+	//	var NewFullPath = SavePath + string(os.PathSeparator) + TempPyc.Name + ".py"
+	//	//var LogText = f.LogEdit.Text()
+	//	//f.LogEdit.SetText(fmt.Sprintf("%s Success \n", NewFullPath) + LogText)
+	//	//保存目录是否存在
+	//	os.MkdirAll(NewFullPath[:strings.LastIndex(NewFullPath, string(os.PathSeparator))], os.ModePerm)
+	//	err, _, _ := Utils.Shellout(fmt.Sprintf("uncompyle6 -o %s %s",NewFullPath,TempPyc.FullPath))
+	//	fmt.Println(fmt.Sprintf("uncompyle6 -o %s %s",NewFullPath,TempPyc.FullPath))
+	//	if err != nil {
+	//		log.Printf("error: %v\n", err)
+	//	}
+	//	wp.Do(func() error {
+	//		return nil
+	//	})
+	//}
+	//wp.Wait()
+
 }

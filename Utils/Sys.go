@@ -1,8 +1,12 @@
 package Utils
 
 import (
+	"bytes"
+	"encoding/json"
 	"io/ioutil"
 	"os"
+	"os/exec"
+	"runtime"
 	"strings"
 )
 
@@ -10,11 +14,19 @@ type FileInfo struct {
 	Name     string
 	Path     string
 	FullPath string
-	suffix   string
+	Suffix   string
 }
 type GetPycInfo struct {
 	Pyc    []FileInfo
 	Struct string
+}
+
+func (this GetPycInfo) ToJson() string {
+	b, err := json.Marshal(this)
+	if err != nil {
+		return ""
+	}
+	return string(b)
 }
 
 var files GetPycInfo
@@ -36,30 +48,32 @@ func ListDir(dirPth string) (GetPycInfo, error) {
 			files.Struct = dirPth + PthSep + fi.Name()
 			//_struct = dirPth + PthSep + fi.Name()
 			continue
+		default: //防止无文件名溢出
+			if fi.IsDir() { // 忽略目录
+				ListDir(dirPth + PthSep + fi.Name())
+			}
 		}
-		if fi.IsDir() { // 忽略目录
-			ListDir(dirPth + PthSep + fi.Name())
-			//fmt.Println(dirPth + PthSep + fi.Name())
-		} else {
-			files.Pyc = append(files.Pyc, FileInfo{
-				Name:     GetFileName(fi.Name()),
-				Path:     dirPth + PthSep,
-				suffix:   Getsuffix(fi.Name()),
-				FullPath: dirPth + PthSep + fi.Name(),
-			})
+		if strings.LastIndex(fi.Name(), ".") <= 0 || Getsuffix(fi.Name()) != "pyc" {
+			continue
 		}
+		Temp := FileInfo{
+			Name:     GetFileName(fi.Name()),
+			Path:     dirPth + PthSep,
+			Suffix:   Getsuffix(fi.Name()),
+			FullPath: dirPth + PthSep + fi.Name(),
+		}
+		files.Pyc = append(files.Pyc, Temp)
 	}
 	return files, nil
 }
 func GetFileName(Name string) string {
-	//var c = strings.Split(Name,".")
 	var NewFilePathName = Name[0:strings.LastIndex(Name, ".")]
-	NewFilePathName = strings.ReplaceAll(NewFilePathName, ".", "/")
+	NewFilePathName = strings.ReplaceAll(NewFilePathName, ".", string(os.PathSeparator))
 	return NewFilePathName
 }
 func Getsuffix(Name string) string {
 	var c = strings.Split(Name, ".")
-	return c[len(c)-1]
+	return strings.ToLower(c[len(c)-1])
 }
 func OpenFile(fileName string) []byte {
 	var ContentByte []byte
@@ -77,8 +91,25 @@ func OpenFile(fileName string) []byte {
 fullpath 全路径
 */
 func CreateFileWithDir(fullpath string, content []byte) {
-	os.MkdirAll(fullpath[:strings.LastIndex(fullpath, "/")], os.ModePerm)
+
+	os.MkdirAll(fullpath[:strings.LastIndex(fullpath, string(os.PathSeparator))], os.ModePerm)
 	file, _ := os.OpenFile(fullpath, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
 	defer file.Close()
 	file.Write(content)
+}
+
+func Shellout(command string) (error, string, string) {
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	var cmd *exec.Cmd
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("cmd", "/C", command)
+	default:
+		cmd = exec.Command("bash", "-c", command)
+	}
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	err := cmd.Run()
+	return err, stdout.String(), stderr.String()
 }

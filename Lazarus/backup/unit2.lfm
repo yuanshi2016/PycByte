@@ -32,6 +32,7 @@ object Main: TMain
     CharCase = ecNormal
     MaxLength = 0
     TabOrder = 0
+    Text = '/Volumes/D/GolangTool/PycUncode/test/aaaa'
     SpaceChar = '_'
   end
   object SavePathEdit: TMaskEdit
@@ -42,6 +43,7 @@ object Main: TMain
     CharCase = ecNormal
     MaxLength = 0
     TabOrder = 1
+    Text = '/Volumes/D/GolangTool/PycUncode/test/save'
     SpaceChar = '_'
   end
   object LogEdit: TEdit
@@ -66,6 +68,7 @@ object Main: TMain
     Top = 39
     Width = 75
     Caption = '选择目录'
+    OnClick = SaveSelectButtonClick
     TabOrder = 4
   end
   object RunButton: TButton
